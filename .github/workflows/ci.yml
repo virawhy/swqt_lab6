@@ -49,15 +49,20 @@ jobs:
             core.setFailed("Pull Request number not found in context.");
             return;
           }
-          const { data: reviews } = await github.pulls.listReviews({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            pull_number: prNumber
-          });
-          const approved = reviews.some(review => review.state === 'APPROVED');
-          if (!approved) {
-            core.setFailed("Code review is not approved.");
-          }
-          else {
-            console.log("Code review is approved.");
+
+          try {
+            const reviews = await github.rest.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+
+            const approved = reviews.data.some(review => review.state === 'APPROVED');
+            if (!approved) {
+              core.setFailed("Code review is not approved.");
+            } else {
+              console.log("Code review is approved.");
+            }
+          } catch (error) {
+            core.setFailed(`Error fetching reviews: ${error.message}`);
           }
