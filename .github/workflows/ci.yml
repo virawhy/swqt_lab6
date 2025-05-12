@@ -1,32 +1,50 @@
 on:
-    pull_request:
-      types: [opened, edited, reopened, synchronize, review_requested]
-      branches:
-        - develop\
-        - main
+  pull_request:
+    types: [opened, edited, reopened, synchronize, review_requested]
+    branches:
+      - develop
+      - main
+
 jobs:
-    build:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v3
-  
-        - name: Set up Python
-          uses: actions/setup-python@v4
-          with:
-            python-version: '3.10'
-  
-        - name: Install dependencies
-          run: |
-            pip install -r requirements.txt
-  
-        - name: Run tests
-          run: pytest --junitxml=report.xml  # fixed incorrect dash
-  
-    analysis:
-      runs-on: ubuntu-latest
-      needs: build  # corrected from "test"
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v3
-  
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest --junitxml=report.xml  # fixed incorrect dash
+
+  analysis:
+    runs-on: ubuntu-latest
+    needs: build  # corrected from "test"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+  review-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Review Check for develop
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const prNumber = context.payload.pull_request.number;
+            const { data: reviews } = await github.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber
+            });
+            const approved = reviews.some(review => review.state === 'APPROVED');
+            if (!approved) {
+              core.setFailed("Код-рев’ю не схвалено");
+            }

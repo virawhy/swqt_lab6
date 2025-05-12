@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "test-organization-01",
+        "projectKey": "virawhy_swqt_lab6"
+    }
+}
