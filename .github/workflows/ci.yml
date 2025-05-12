@@ -40,29 +40,42 @@ jobs:
   review-check:
     runs-on: ubuntu-latest
     steps:
-    - name: Code Review Check for develop
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const prNumber = context.payload.pull_request?.number;
-          if (!prNumber) {
-            core.setFailed("Pull Request number not found in context.");
-            return;
-          }
+      - name: Code Review Check for develop
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const prNumber = context.payload.pull_request?.number;
+            if (!prNumber) {
+              core.setFailed("Pull Request number not found in context.");
+              return;
+            }
 
-          try {
-            const reviews = await github.rest.pulls.listReviews({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
+            try {
+              const reviews = await github.rest.pulls.listReviews({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: prNumber
+              });
 
-            const approved = reviews.data.some(review => review.state === 'APPROVED');
-          if (!approved) {
-            console.log("Warning: Code review is not approved, but proceeding.");
-          } else {
-            console.log("Code review is approved.");
-          }
-          } catch (error) {
-            core.setFailed(`Error fetching reviews: ${error.message}`);
-          }
+              const approved = reviews.data.some(review => review.state === 'APPROVED');
+              if (!approved) {
+                console.log("Warning: Code review is not approved, but proceeding.");
+              } else {
+                console.log("Code review is approved.");
+              }
+            } catch (error) {
+              core.setFailed(`Error fetching reviews: ${error.message}`);
+            }
+
+      - name: Запуск flake8 через Reviewdog
+        uses: reviewdog/action-flake8@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: error
+      - name: Запуск Black через Reviewdog
+        uses: reviewdog/action-black@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: info
