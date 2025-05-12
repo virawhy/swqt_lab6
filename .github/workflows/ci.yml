@@ -31,6 +31,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Count lines of code with Cloc
+        run: |
+          sudo apt-get install -y cloc
+          cloc src/ > cloc-report.txt
+          cat cloc-report.txt
+
   review-check:
     runs-on: ubuntu-latest
     steps:
