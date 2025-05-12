@@ -40,17 +40,24 @@ jobs:
   review-check:
     runs-on: ubuntu-latest
     steps:
-      - name: Code Review Check for develop
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const prNumber = context.payload.pull_request.number;
-            const { data: reviews } = await github.pulls.listReviews({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: prNumber
-            });
-            const approved = reviews.some(review => review.state === 'APPROVED');
-            if (!approved) {
-              core.setFailed("Код-рев’ю не схвалено");
-            }
+    - name: Code Review Check for develop
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const prNumber = context.payload.pull_request?.number;
+          if (!prNumber) {
+            core.setFailed("Pull Request number not found in context.");
+            return;
+          }
+          const { data: reviews } = await github.pulls.listReviews({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: prNumber
+          });
+          const approved = reviews.some(review => review.state === 'APPROVED');
+          if (!approved) {
+            core.setFailed("Code review is not approved.");
+          }
+          else {
+            console.log("Code review is approved.");
+          }
