@@ -4,7 +4,9 @@ on:
     branches:
       - develop
       - main
-
+env:
+  REVIEWDOG_VERSION: latest
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -68,16 +70,16 @@ jobs:
             } catch (error) {
               core.setFailed(`Error fetching reviews: ${error.message}`);
             }
-
+      - run: pip install flake8==6.0.0
       - name: Запуск flake8 через Reviewdog
-        uses: reviewdog/action-flake8@v2
+        uses: reviewdog/action-flake8@b65981e158319f08cb7d0132f28bc0081e110adc
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
           level: error
-
+      - run: pip install black==23.1.0
       - name: Запуск Black через Reviewdog
-        uses: reviewdog/action-black@v1
+        uses: reviewdog/action-black@644053a260402bc4278a865906107bd8aef7fae8 # v3.22.4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
