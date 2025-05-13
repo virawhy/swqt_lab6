@@ -26,8 +26,10 @@ jobs:
 
       - name: Run tests
         env:
-          PYTHONPATH: src
-        run: pytest
+          PYTHONPATH: ./src
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+          pytest src/tests/
 
   analysis:
     runs-on: ubuntu-latest
