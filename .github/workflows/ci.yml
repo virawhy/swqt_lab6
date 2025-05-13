@@ -9,7 +9,7 @@ env:
   
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -24,12 +24,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Set up PYTHONPATH
-        run: echo "PYTHONPATH=$PYTHONPATH:${pwd}" >> $GITHUB_ENV
-
       - name: Run tests
         run: |
-          pytest
+          pytest tests/
 
   analysis:
     runs-on: ubuntu-latest
