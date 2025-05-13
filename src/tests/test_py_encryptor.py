@@ -6,7 +6,7 @@ import base64
 # Add the src directory to the Python path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from setup import TextEncryptor  # Import TextEncryptor from the setup module
+from src.setup import TextEncryptor  # Import TextEncryptor from the setup module
 
 # Helper function to extract salt from the encrypted token
 def extract_salt(token):
