@@ -100,3 +100,16 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Generate changelog
+        run: |
+          git checkout main
+          git pull
+          git log --oneline --graph > main_changes.txt
+          cat main_changes.txt
