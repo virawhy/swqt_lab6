@@ -3,7 +3,7 @@ import os
 import pytest
 import base64
 
-from ..src.setup import TextEncryptor  # Use relative import
+from src.setup import TextEncryptor  # Use relative import
 def extract_salt(token):
     decoded = base64.urlsafe_b64decode(token.encode())
     return decoded[:16]
