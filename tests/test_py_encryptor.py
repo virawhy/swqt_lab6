@@ -3,11 +3,8 @@ import os
 import pytest
 import base64
 
-# Add the src directory to the Python path
-#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
-
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 from src.setup import TextEncryptor  # Use relative import
-# Helper function to extract salt from the encrypted token
 def extract_salt(token):
     decoded = base64.urlsafe_b64decode(token.encode())
     return decoded[:16]
