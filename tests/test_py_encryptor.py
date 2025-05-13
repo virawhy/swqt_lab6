@@ -3,9 +3,10 @@ import os
 import pytest
 import base64
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Add the src directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-from setup import TextEncryptor  # Adjust the import based on the actual file/module name
+from setup import TextEncryptor  # Import TextEncryptor from the setup module
 
 # Helper function to extract salt from the encrypted token
 def extract_salt(token):
