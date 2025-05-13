@@ -28,7 +28,6 @@ jobs:
         env:
           PYTHONPATH: ./src
         run: |
-          export PYTHONPATH=$PYTHONPATH:$(pwd)/src
           pytest src/tests/
 
   analysis:

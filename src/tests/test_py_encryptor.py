@@ -4,7 +4,7 @@ import pytest
 import base64
 
 # Add the src directory to the Python path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+#sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 from src.setup import TextEncryptor  # Import TextEncryptor from the setup module
 
@@ -68,3 +68,5 @@ def test_encrypt_decrypt_multiple_messages(password):
         encrypted = enc.encrypt(msg)
         decrypted = enc.decrypt(encrypted, password)
         assert decrypted == msg
+
+
