@@ -1,13 +1,9 @@
-import sys
-import os
 import pytest
 import base64
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from encryptor import TextEncryptor  # Use relative import
 
-from setup import TextEncryptor  # Adjust the import based on the actual file/module name
 
-# Helper function to extract salt from the encrypted token
 def extract_salt(token):
     decoded = base64.urlsafe_b64decode(token.encode())
     return decoded[:16]
