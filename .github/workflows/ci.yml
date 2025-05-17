@@ -1,3 +1,6 @@
+permissions: contents: read pull-requests: write
+
+on: pull_request: types: [opened, edited, reopened, 
 on:
   pull_request:
     types: [opened, edited, reopened, synchronize, review_requested]
@@ -35,7 +38,7 @@ jobs:
 
   analysis:
     runs-on: ubuntu-latest
-    needs: build  # corrected from "test"
+    needs: build
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -88,7 +91,7 @@ jobs:
           level: error
       - run: pip install black==23.1.0
       - name: Запуск Black через Reviewdog
-        uses: reviewdog/action-black@644053a260402bc4278a865906107bd8aef7fae8 # v3.22.4
+        uses: reviewdog/action-black@644053a260402bc4278a865906107bd8aef7fae8
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review
@@ -100,7 +103,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
