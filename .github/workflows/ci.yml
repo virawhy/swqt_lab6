@@ -36,6 +36,8 @@ jobs:
           pytest --cov=src --cov-report=xml tests/
       - name: Show coverage.xml
         run: cat coverage.xml
+      - name: Verify coverage.xml exists
+        run: ls -la coverage.xml
 
   analysis:
     runs-on: ubuntu-latest
@@ -49,7 +51,18 @@ jobs:
           sudo apt-get install -y cloc
           cloc src/ > cloc-report.txt
           cat cloc-report.txt
-
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  
   review-check:
     runs-on: ubuntu-latest
     steps:
@@ -98,17 +111,6 @@ jobs:
           reporter: github-pr-review
           level: info
 
-  sonarqube:
-    name: SonarQube
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v5
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   changelog:
     runs-on: ubuntu-latest
     steps:
