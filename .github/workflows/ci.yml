@@ -30,6 +30,8 @@ jobs:
           PYTHONPATH: ${{ github.workspace }}/src
         run: |
           pytest --cov=src --cov-report=xml tests/
+      - name: Show coverage.xml
+        run: cat coverage.xml
 
   analysis:
     runs-on: ubuntu-latest
