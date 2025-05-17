@@ -63,5 +63,3 @@ def test_encrypt_decrypt_multiple_messages(password):
         encrypted = enc.encrypt(msg)
         decrypted = enc.decrypt(encrypted, password)
         assert decrypted == msg
-
-
